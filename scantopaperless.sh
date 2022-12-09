@@ -21,23 +21,31 @@ WIDTH=210
 WIDTH_INCHES=8.268
 HEIGHT=297
 HEIGHT_INCHES=11.693
+
+# Set scanner mode and user from argument
+IFS=' '
+read -ra mode_user_args <<< ${!1}
+scanner_mode=${mode_user_args[0]}
+scanner_user=${mode_user_args[1]}
+
+# Construct variable names from scanner_user
+paperless_token_var="PAPERLESS_TOKEN_$scanner_user"
+paperless_url_var="PAPERLESS_URL_$scanner_user"
+hass_device_var="HASS_DEVICE_$scanner_user"
+
+# Set variables based on user
+paperless_token=${!paperless_token_var}
+paperless_url=${!paperless_url_var}
+hass_device=${!hass_device_var}
+
 SCANNER_USER=$1
 
 resolution=$RESOLUTION
 device=$SCANNER
 
-if [ "$SCANNER_USER" = 'fabi' ];then
-    TOKEN=$PAPERLESS_TOKEN_FABI
-    PAPERLESS_URL=$PAPERLESS_URL_FABI
-    HASS_DEVICE=$HASS_DEVICE_FABI
-elif [ "$SCANNER_USER" = 'julius' ];then
-    TOKEN=$PAPERLESS_TOKEN_JULIUS
-    PAPERLESS_URL=$PAPERLESS_URL_JULIUS
-    HASS_DEVICE=$HASS_DEVICE_JULIUS
-else
-    echo "no user specified, aborting"
-    exit 1
-fi
+TOKEN=$paperless_token
+PAPERLESS_URL=$paperless_url
+HASS_DEVICE=$hass_device
 
 # Ensure base dir exists
 #BASE=~/brscan
