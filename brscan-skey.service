@@ -1,0 +1,11 @@
+[Unit]
+Description=Brother Scan Key Service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/brscan-skey
+ExecStop=/usr/bin/brscan-skey -t
+User=administrator
+
+[Install]
+WantedBy=multi-user.target
