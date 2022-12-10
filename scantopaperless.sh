@@ -22,11 +22,21 @@ WIDTH_INCHES=8.268
 HEIGHT=297
 HEIGHT_INCHES=11.693
 
+# Check if required packages are installed
+required_packages=("scanadf" "pnmtops" "psmerge" "ps2pdf" "pdftk")
+for package in $required_packages:
+do
+    if [ "`which $package`" = ' ' ];then
+        echo "command $package not found"
+        echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
+    fi
+done	
+
 # Set scanner mode and user from argument
 IFS=' '
 read -ra mode_user_args <<< ${!1}
 scanner_mode=${mode_user_args[0]}
-scanner_user=${mode_user_args[1]}
+scanner_user=${!mode_user_args[1]}
 
 # Construct variable names from scanner_user
 paperless_token_var="PAPERLESS_TOKEN_$scanner_user"
@@ -60,7 +70,8 @@ else
 fi
 
 # Set full path for tempfile
-filename=$(date | sed s/' '/'_'/g | sed s/'\:'/'_'/g)
+timestamp=$(date "+%Y_%m_%d__%H_%M_%S")
+filename=$timestamp
 output_tmp=$BASE/$filename
 
 # Scan pages
