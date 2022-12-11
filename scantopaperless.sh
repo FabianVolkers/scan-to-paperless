@@ -53,11 +53,18 @@ SCANNER_USER=$1
 resolution=$RESOLUTION
 device=$SCANNER
 
-HASS_DEVICE=$hass_device
+if [ "$scanner_mode" == 'simplex' ];then
+   ready_to_upload=true
+else
+   ready_to_upload=false
+fi
 
 # Ensure base dir exists
 #BASE=~/brscan
-BASE=/mnt/scanner/$scanner_user
+BASE=$SCANNER_BASE_DIR/$scanner_user
+if [ "$scanner_mode" == 'duplex'];then
+  BASE="$BASE/duplex"
+fi
 mkdir -p $BASE
 
 if [ "`which usleep`" != '' ];then
@@ -99,12 +106,42 @@ do
 done
 rm -f "$pnmfile".ps
 
-# POST document to paperless
-# https://docs.paperless-ngx.com/api/#file-uploads
-# curl -X ...
-echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
-curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
-# Remove PDF from local disk (could be combined with other cleanup actions)
+#######################
+### DUPLEX SCANNING ###
+#######################
+
+if [ "$scanner_mode" == 'duplex' ];then
+   echo "Duplex scanning"
+   if [ "`ls $BASE/*.pdf | wc -l`" -gt 1 ];then
+     output_tmp="$output_tmp"_merged.pdf
+     filename="$filename"_merged.pdf
+     ODD=$(ls $BASE/* | head -n1)
+     EVEN=$(ls $BASE/* | head -n2 | tail -n1)
+     echo "Merging odd $ODD and even $EVEN page numbers"
+     pdftk A=$ODD B=$EVEN shuffle A Bend-1south output "$output_tmp"
+     ready_to_upload=true
+  fi
+fi
+
+######################
+
+if [ "$ready_to_upload" == true ];then
+  # POST document to paperless
+  # https://docs.paperless-ngx.com/api/#file-uploads
+  echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+  curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+
+  if [ "$scanner_mode" == 'duplex' ];then
+    echo "Moving merged file to $BASE/../"
+    mv "$output_tmp" $BASE/../
+
+    #Remove PDF from local disk
+    for pdffile in $(ls $BASE/*.pdf)
+    do
+      rm $pdffile
+    done
+  fi
+fi
 
 echo "Sending homeassistant notification to $hass_device\n"
 notification_data=$(printf '{"title": "Scanning complete", "message": "%s.pdf"}' $filename)
