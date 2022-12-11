@@ -54,12 +54,11 @@ resolution=$RESOLUTION
 device=$SCANNER
 
 TOKEN=$paperless_token
-PAPERLESS_URL=$paperless_url
 HASS_DEVICE=$hass_device
 
 # Ensure base dir exists
 #BASE=~/brscan
-BASE=/mnt/scanner/$SCANNER_USER
+BASE=/mnt/scanner/$scanner_user
 mkdir -p $BASE
 
 if [ "`which usleep`" != '' ];then
@@ -104,8 +103,8 @@ rm -f "$pnmfile".ps
 # POST document to paperless
 # https://docs.paperless-ngx.com/api/#file-uploads
 # curl -X ...
-echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $PAPERLESS_URL/api/documents/post_document/
-curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${TOKEN}" --form document=@"$output_tmp".pdf $PAPERLESS_URL/api/documents/post_document/
+echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${TOKEN}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
 # Remove PDF from local disk (could be combined with other cleanup actions)
 
 echo "Sending homeassistant notification\n"
