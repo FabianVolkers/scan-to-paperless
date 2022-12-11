@@ -106,7 +106,7 @@ echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token
 curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
 # Remove PDF from local disk (could be combined with other cleanup actions)
 
-echo "Sending homeassistant notification\n"
+echo "Sending homeassistant notification to $hass_device\n"
 notification_data=$(printf '{"title": "Scanning complete", "message": "%s.pdf"}' $filename)
-curl -X POST -H "Authorization: Bearer $HASS_API_TOKEN -H "Content-Type: application/json" -d "$notification_data" $HASS_URL/api/services/notify/$HASS_DEVICE
+curl -X POST -H "Authorization: Bearer $HASS_API_TOKEN -H "Content-Type: application/json" -d "$notification_data" $HASS_URL/api/services/notify/$hass_device
 echo "Done Scanning File\n"
