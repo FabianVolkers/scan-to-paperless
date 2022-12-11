@@ -2,6 +2,13 @@
 
 This repo contains code to use scanadf to scan to paperless. It was originally created to use a Brother MFC-L2710DN and its scan button but should work on other models with the correct drivers installed.
 
+## Manual Installation
+
+Put the files in the right locations
+
+- `brscan-skey.config` at `/opt/brother/scanner/brscan-skey/brscan-skey.config`
+- `scantopaperless.sh` at /opt/brother/scanner/brscan-skey/script/scantopaperless.sh`
+- `.env` at /opt/brother/scanner/brscan-skey/script/.env`
 
 ## Brother Drivers
 
