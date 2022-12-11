@@ -23,14 +23,14 @@ HEIGHT=297
 HEIGHT_INCHES=11.693
 
 # Check if required packages are installed
-required_packages=("scanadf" "pnmtops" "psmerge" "ps2pdf" "pdftk")
-for package in $required_packages:
+required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
+for package in "${required_packages[@]}"
 do
-    if [ "`which $package`" = ' ' ];then
+    if [ "`which $package`" == '' ];then
         echo "command $package not found"
         echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
     fi
-done	
+done
 
 # Set scanner mode and user from argument
 IFS=' '
@@ -62,7 +62,7 @@ HASS_DEVICE=$hass_device
 BASE=/mnt/scanner/$SCANNER_USER
 mkdir -p $BASE
 
-if [ "`which usleep`" != ' ' ];then
+if [ "`which usleep`" != '' ];then
     usleep 10000
 
 else
