@@ -58,8 +58,6 @@ paperless_token=${!paperless_token_var}
 paperless_url=${!paperless_url_var}
 hass_device=${!hass_device_var}
 
-#SCANNER_USER=$1
-
 resolution=$RESOLUTION
 device=$SCANNER
 
