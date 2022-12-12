@@ -10,17 +10,29 @@ set +o noclobber
 
 echo "Begin scan from option $1"
 
-echo "Loading config from /opt/brother/scanner/brscan-skey/script/.env"
+# Check if required packages are installed
+required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
+for package in "${required_packages[@]}"
+do
+    if [ "`which $package`" == '' ];then
+        echo "command $package not found"
+        echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
+        # Stop executing
+    fi
+done
+
+# CONSTANTS
+# Papersizes in millimeter
+# A4 Papersize
+A4_WIDTH=210
+A4_HEIGHT=297
+
+echo "Loading user config from /opt/brother/scanner/brscan-skey/script/.env"
 source /opt/brother/scanner/brscan-skey/script/.env
 
 # Read Arguments
 SCANNER=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
-
-# Papersizes in millimeter
-# A4 Papersize
-A4_WIDTH=210
-A4_HEIGHT=297
 
 papersize_width_var="$PAPERSIZE"_WIDTH
 papersize_height_var="PAPERSIZE"_HEIGHT
@@ -30,15 +42,6 @@ WIDTH_INCHES=$(($WIDTH * 0.03937008))
 HEIGHT=${!papersize_height_var}
 HEIGHT_INCHES=$(($HEIGHT * 0.03937008))
 
-# Check if required packages are installed
-required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
-for package in "${required_packages[@]}"
-do
-    if [ "`which $package`" == '' ];then
-        echo "command $package not found"
-        echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
-    fi
-done
 
 # Set scanner mode and user from argument
 IFS=' '
