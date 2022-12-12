@@ -26,9 +26,9 @@ papersize_width_var="$PAPERSIZE"_WIDTH
 papersize_height_var="PAPERSIZE"_HEIGHT
 
 WIDTH=${!papersize_width_var}
-WIDTH_INCHES=$WIDTH * 25.4
+WIDTH_INCHES=$(($WIDTH * 0.03937008))
 HEIGHT=${!papersize_height_var}
-HEIGHT_INCHES=$HEIGHT * 25.4
+HEIGHT_INCHES=$(($HEIGHT * 0.03937008))
 
 # Check if required packages are installed
 required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
