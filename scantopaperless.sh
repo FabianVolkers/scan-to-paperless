@@ -122,8 +122,8 @@ if [ "$scanner_mode" == 'duplex' ];then
    if [ "$(find $BASE/*.pdf | wc -l)" -gt 1 ];then
      output_tmp="$output_tmp"_merged
      filename="$filename"_merged
-     ODD=$(find $BASE/* | head -n1)
-     EVEN=$(find $BASE/* | head -n2 | tail -n1)
+     ODD=$(find "$BASE"/* | head -n1)
+     EVEN=$(find "$BASE"/* | head -n2 | tail -n1)
      echo "Merging odd $ODD and even $EVEN page numbers"
      echo pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
      pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
