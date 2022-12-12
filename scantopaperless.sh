@@ -142,8 +142,8 @@ fi
 if [ "$ready_to_upload" == true ];then
   # POST document to paperless
   # https://docs.paperless-ngx.com/api/#file-uploads
-  echo curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
-  curl -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+  echo curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+  curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
 
   if [ "$scanner_mode" == 'duplex' ];then
     echo "Moving merged file to $BASE/../"
@@ -157,5 +157,5 @@ fi
 
 echo "Sending homeassistant notification to $hass_device\n"
 notification_data=$(printf '{"title": "Scanning complete", "message": "%s.pdf"}' $filename)
-curl -X POST -H "Authorization: Bearer $HASS_API_TOKEN" -H "Content-Type: application/json" -d "$notification_data" $HASS_URL/api/services/notify/$hass_device
+curl -s -X POST -H "Authorization: Bearer $HASS_API_TOKEN" -H "Content-Type: application/json" -d "$notification_data" $HASS_URL/api/services/notify/$hass_device
 echo "Done Scanning File\n"
