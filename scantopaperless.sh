@@ -11,12 +11,12 @@ set +o noclobber
 echo "Begin scan from option $1"
 
 # Check if required packages are installed
-required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
+required_packages=(scanadf pnmtops psmerge ps2pdf pdftk bc)
 for package in "${required_packages[@]}"
 do
     if [ "$(which "$package")" == '' ];then
         echo "command $package not found"
-        echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
+        echo "Packages sane, netpbm, pdftk, ghostscript, bc need to be installed"
         # Stop executing
     fi
 done
@@ -35,7 +35,7 @@ SCANNER=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
 
 papersize_width_var="$PAPERSIZE"_WIDTH
-papersize_height_var="PAPERSIZE"_HEIGHT
+papersize_height_var="$PAPERSIZE"_HEIGHT
 
 WIDTH=${!papersize_width_var}
 WIDTH_INCHES=$(echo "$WIDTH * 0.03937008" | bc)
@@ -86,17 +86,17 @@ output_tmp=$BASE/$filename
 
 # Scan pages
 echo "scan from $FRIENDLY_NAME($device)"
-scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o"$output_tmp"_%04d.ppm # user needs to be in lp group
+echo scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm
+scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm # user needs to be in lp group
 
 # Convert images to PostScript
 echo "Convert images to PostScript"
 pnmtops_pids=()
-for pnmfile in "$output_tmp"*.ppm
+for pnmfile in "$output_tmp"*.pbm
 do
    echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$pnmfile".ps
    pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$pnmfile".ps &
    pnmtops_pids+=(${!})
-   #rm -f "$pnmfile"
 done
 
 for pnmtops_pid in "${pnmtops_pids[@]}"
@@ -104,7 +104,7 @@ do
   wait "${pnmtops_pid}"
 done
 
-rm -f "$output_tmp"*.ppm
+rm -f "$output_tmp"*.pbm
 
 # Merge individual PostScript files
 echo "Merge individual PostScript files"
