@@ -3,12 +3,10 @@
 
 set +o noclobber
 #
-#   $1 = user to post document to
-#
-
-#  
-#       100,200,300,400,600
-#
+#   $1 = Selected Scanner Option (OCR,FILE,IMAGE,EMAIL)
+#   $2 = Device name
+#   $3 = Friendly device name
+#  #
 
 echo "Begin scan from option $1"
 
@@ -29,7 +27,7 @@ papersize_height_var="PAPERSIZE"_HEIGHT
 
 WIDTH=${!papersize_width_var}
 WIDTH_INCHES=$WIDTH * 25.4
-HEIGHT=${papersize_height_var}
+HEIGHT=${!papersize_height_var}
 HEIGHT_INCHES=$HEIGHT * 25.4
 
 # Check if required packages are installed
