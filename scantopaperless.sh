@@ -145,7 +145,7 @@ if [ "$ready_to_upload" == true ];then
     echo "Moving merged file to $BASE/../"
     mv "$output_tmp".pdf $BASE/../
 
-    #Remove PDF from local disk
+    # Remove merged PDFs from local disk
     echo rm $BASE/*.pdf
     rm $BASE/*.pdf
   fi
