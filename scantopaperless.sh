@@ -10,12 +10,12 @@ set +o noclobber
 #       100,200,300,400,600
 #
 
-echo "Begin scan with argument $1"
+echo "Begin scan from option $1"
 
 echo "Loading config from /opt/brother/scanner/brscan-skey/script/.env"
 source /opt/brother/scanner/brscan-skey/script/.env
 
-# Scanner Options
+# Read Arguments
 SCANNER=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
 
@@ -92,7 +92,7 @@ filename=$timestamp
 output_tmp=$BASE/$filename
 
 # Scan pages
-echo "scan from $2($device)"
+echo "scan from $FRIENDLY_NAME($device)"
 scanadf --device-name "$device" --resolution $resolution -x $WIDTH -y $HEIGHT -o"$output_tmp"_%04d # user needs to be in lp group
 
 # Convert images to PostScript
