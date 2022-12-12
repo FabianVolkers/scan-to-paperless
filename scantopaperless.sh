@@ -21,6 +21,8 @@ do
     fi
 done
 
+num_cores=$(grep -c processor /proc/cpuinfo)
+
 # CONSTANTS
 # Papersizes in millimeter
 # A4 Papersize
@@ -113,8 +115,8 @@ psmerge -o"$output_tmp".ps  $(ls "$output_tmp"*.ps)
 
 # Convert PostScript file to PDF
 echo "Convert PostScript file to PDF"
-echo ps2pdf "$output_tmp".ps   "$output_tmp".pdf
-ps2pdf "$output_tmp".ps   "$output_tmp".pdf
+echo ps2pdf -dNumRenderingThreads="$num_cores" "$output_tmp".ps   "$output_tmp".pdf
+ps2pdf -dNumRenderingThreads="$num_cores" "$output_tmp".ps   "$output_tmp".pdf
 
 # Remove PostScript files
 
