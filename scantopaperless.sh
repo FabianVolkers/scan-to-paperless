@@ -19,11 +19,19 @@ source /opt/brother/scanner/brscan-skey/script/.env
 SCANNER=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
 RESOLUTION=600
+
+# Papersizes in millimeter
 # A4 Papersize
-WIDTH=210
-WIDTH_INCHES=8.268
-HEIGHT=297
-HEIGHT_INCHES=11.693
+A4_WIDTH=210
+A4_HEIGHT=297
+
+papersize_width_var="$PAPERSIZE"_WIDTH
+papersize_height_var="PAPERSIZE"_HEIGHT
+
+WIDTH=${!papersize_width_var}
+WIDTH_INCHES=$WIDTH * 25.4
+HEIGHT=${papersize_height_var}
+HEIGHT_INCHES=$HEIGHT * 25.4
 
 # Check if required packages are installed
 required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
