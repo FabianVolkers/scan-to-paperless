@@ -101,7 +101,7 @@ done
 
 for pnmtops_pid in "${pnmtops_pids[@]}"
 do
-  wait ${pnmtops_pid}
+  wait "${pnmtops_pid}"
 done
 
 rm -f "$output_tmp"*.ppm
