@@ -92,8 +92,8 @@ scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIG
 echo "Convert images to PostScript"
 for pnmfile in $(ls "$output_tmp"*)
 do
-   echo pnmtops -dpi="$resolution" -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  "$pnmfile".ps
-   pnmtops -dpi="$resolution" -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  > "$pnmfile".ps
+   echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$pnmfile".ps
+   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$pnmfile".ps
    rm -f "$pnmfile"
 done
 
