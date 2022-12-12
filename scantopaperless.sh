@@ -119,7 +119,7 @@ rm "$output_tmp"*.ps
 
 if [ "$scanner_mode" == 'duplex' ];then
    ready_to_upload=false
-   if [ "$(find $BASE/*.pdf | wc -l)" -gt 1 ];then
+   if [ "$(find "$BASE"/*.pdf | wc -l)" -gt 1 ];then
      output_tmp="$output_tmp"_merged
      filename="$filename"_merged
      ODD=$(find "$BASE"/* | head -n1)
