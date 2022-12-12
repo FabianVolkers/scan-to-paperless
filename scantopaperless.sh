@@ -18,7 +18,6 @@ source /opt/brother/scanner/brscan-skey/script/.env
 # Scanner Options
 SCANNER=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
-RESOLUTION=600
 
 # Papersizes in millimeter
 # A4 Papersize
