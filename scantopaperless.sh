@@ -14,7 +14,7 @@ echo "Begin scan from option $1"
 required_packages=(scanadf pnmtops psmerge ps2pdf pdftk)
 for package in "${required_packages[@]}"
 do
-    if [ "`which $package`" == '' ];then
+    if [ "$(which "$package")" == '' ];then
         echo "command $package not found"
         echo "Packages sane, netpbm, pdftk, ghostscript need to be installed"
         # Stop executing
@@ -38,14 +38,14 @@ papersize_width_var="$PAPERSIZE"_WIDTH
 papersize_height_var="PAPERSIZE"_HEIGHT
 
 WIDTH=${!papersize_width_var}
-WIDTH_INCHES=$(($WIDTH * 0.03937008))
+WIDTH_INCHES=$((WIDTH * 0.03937008))
 HEIGHT=${!papersize_height_var}
-HEIGHT_INCHES=$(($HEIGHT * 0.03937008))
+HEIGHT_INCHES=$((HEIGHT * 0.03937008))
 
 
 # Set scanner mode and user from argument
 IFS=' '
-read -ra mode_user_args <<< ${!1}
+read -ra mode_user_args <<< "${!1}"
 scanner_mode=${mode_user_args[0]}
 scanner_user=${!mode_user_args[1]}
 
@@ -72,7 +72,7 @@ if [ "$scanner_mode" == 'duplex' ];then
 fi
 mkdir -p $BASE
 
-if [ "`which usleep`" != '' ];then
+if [ "$(which usleep)" != '' ];then
     usleep 10000
 
 else
@@ -86,14 +86,14 @@ output_tmp=$BASE/$filename
 
 # Scan pages
 echo "scan from $FRIENDLY_NAME($device)"
-scanadf --device-name "$device" --resolution $resolution -x $WIDTH -y $HEIGHT -o"$output_tmp"_%04d # user needs to be in lp group
+scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o"$output_tmp"_%04d # user needs to be in lp group
 
 # Convert images to PostScript
 echo "Convert images to PostScript"
 for pnmfile in $(ls "$output_tmp"*)
 do
-   echo pnmtops -dpi=$resolution -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  "$pnmfile".ps
-   pnmtops -dpi=$resolution -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  > "$pnmfile".ps
+   echo pnmtops -dpi="$resolution" -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  "$pnmfile".ps
+   pnmtops -dpi="$resolution" -imagewidth=$WIDTH_INCHES -imageheight=$HEIGHT_INCHES -nocenter "$pnmfile"  > "$pnmfile".ps
    rm -f "$pnmfile"
 done
 
@@ -119,14 +119,14 @@ rm "$output_tmp"*.ps
 
 if [ "$scanner_mode" == 'duplex' ];then
    ready_to_upload=false
-   if [ "`ls $BASE/*.pdf | wc -l`" -gt 1 ];then
+   if [ "$(ls $BASE/*.pdf | wc -l)" -gt 1 ];then
      output_tmp="$output_tmp"_merged
      filename="$filename"_merged
      ODD=$(ls $BASE/* | head -n1)
      EVEN=$(ls $BASE/* | head -n2 | tail -n1)
      echo "Merging odd $ODD and even $EVEN page numbers"
-     echo pdftk A=$ODD B=$EVEN shuffle A Bend-1south output "$output_tmp".pdf
-     pdftk A=$ODD B=$EVEN shuffle A Bend-1south output "$output_tmp".pdf
+     echo pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
+     pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
      ready_to_upload=true
   fi
 else
@@ -138,20 +138,20 @@ fi
 if [ "$ready_to_upload" == true ];then
   # POST document to paperless
   # https://docs.paperless-ngx.com/api/#file-uploads
-  echo curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
-  curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf $paperless_url/api/documents/post_document/
+  echo curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token --REDACTED--" --form document=@"$output_tmp".pdf "$paperless_url"/api/documents/post_document/
+  curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf "$paperless_url"/api/documents/post_document/
 
   if [ "$scanner_mode" == 'duplex' ];then
     echo "Moving merged file to $BASE/../"
-    mv "$output_tmp".pdf $BASE/../
+    mv "$output_tmp".pdf "$BASE"/../
 
     # Remove merged PDFs from local disk
-    echo rm $BASE/*.pdf
-    rm $BASE/*.pdf
+    echo rm "$BASE"/*.pdf
+    rm "$BASE"/*.pdf
   fi
 fi
 
-echo "Sending homeassistant notification to $hass_device\n"
-notification_data=$(printf '{"title": "Scanning complete", "message": "%s.pdf"}' $filename)
-curl -s -X POST -H "Authorization: Bearer $HASS_API_TOKEN" -H "Content-Type: application/json" -d "$notification_data" $HASS_URL/api/services/notify/$hass_device
-echo "Done Scanning File\n"
+echo "Sending homeassistant notification to $hass_device"
+notification_data=$(printf '{"title": "Scanning complete", "message": "%s.pdf"}' "$filename")
+curl -s -X POST -H "Authorization: Bearer $HASS_API_TOKEN" -H "Content-Type: application/json" -d "$notification_data" "$HASS_URL"/api/services/notify/"$hass_device"
+echo "Done Scanning File"
