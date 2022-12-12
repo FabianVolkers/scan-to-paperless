@@ -38,9 +38,9 @@ papersize_width_var="$PAPERSIZE"_WIDTH
 papersize_height_var="PAPERSIZE"_HEIGHT
 
 WIDTH=${!papersize_width_var}
-WIDTH_INCHES=$((WIDTH * 0.03937008))
+WIDTH_INCHES=$(echo "$WIDTH * 0.03937008" | bc)
 HEIGHT=${!papersize_height_var}
-HEIGHT_INCHES=$((HEIGHT * 0.03937008))
+HEIGHT_INCHES=$(echo "$HEIGHT * 0.03937008" | bc)
 
 
 # Set scanner mode and user from argument
