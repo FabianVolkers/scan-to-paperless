@@ -70,7 +70,7 @@ BASE=$SCANNER_BASE_DIR/$scanner_user
 if [ "$scanner_mode" == 'duplex' ];then
   BASE="$BASE/duplex"
 fi
-mkdir -p $BASE
+mkdir -p "$BASE"
 
 if [ "$(which usleep)" != '' ];then
     usleep 10000
