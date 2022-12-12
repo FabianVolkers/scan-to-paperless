@@ -64,12 +64,6 @@ hass_device=${!hass_device_var}
 resolution=$RESOLUTION
 device=$SCANNER
 
-if [ "$scanner_mode" == 'simplex' ];then
-   ready_to_upload=true
-else
-   ready_to_upload=false
-fi
-
 # Ensure base dir exists
 #BASE=~/brscan
 BASE=$SCANNER_BASE_DIR/$scanner_user
@@ -124,7 +118,7 @@ rm "$output_tmp"*.ps
 #######################
 
 if [ "$scanner_mode" == 'duplex' ];then
-   echo "Duplex scanning"
+   ready_to_upload=false
    if [ "`ls $BASE/*.pdf | wc -l`" -gt 1 ];then
      output_tmp="$output_tmp"_merged
      filename="$filename"_merged
@@ -135,6 +129,8 @@ if [ "$scanner_mode" == 'duplex' ];then
      pdftk A=$ODD B=$EVEN shuffle A Bend-1south output "$output_tmp".pdf
      ready_to_upload=true
   fi
+else
+  ready_to_upload=true
 fi
 
 ######################
