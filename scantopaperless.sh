@@ -86,16 +86,25 @@ output_tmp=$BASE/$filename
 
 # Scan pages
 echo "scan from $FRIENDLY_NAME($device)"
-scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o"$output_tmp"_%04d # user needs to be in lp group
+scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o"$output_tmp"_%04d.ppm # user needs to be in lp group
 
 # Convert images to PostScript
 echo "Convert images to PostScript"
-for pnmfile in "$output_tmp"*
+pnmtops_pids=()
+for pnmfile in "$output_tmp"*.ppm
 do
    echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$pnmfile".ps
-   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$pnmfile".ps
-   rm -f "$pnmfile"
+   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$pnmfile".ps &
+   pnmtops_pids+=(${!})
+   #rm -f "$pnmfile"
 done
+
+for pnmtops_pid in "${pnmtops_pids[@]}"
+do
+  wait ${pnmtops_pid}
+done
+
+rm -f "$output_tmp"*.ppm
 
 # Merge individual PostScript files
 echo "Merge individual PostScript files"
