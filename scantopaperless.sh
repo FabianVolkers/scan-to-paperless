@@ -36,7 +36,7 @@ source /opt/brother/scanner/brscan-skey/script/.env
 
 # Read Arguments
 device=$2
-FRIENDLY_NAME=$3 # Could be read dynamically
+friendly_name=$3
 
 papersize_width_var="$PAPERSIZE"_WIDTH
 papersize_height_var="$PAPERSIZE"_HEIGHT
@@ -86,7 +86,7 @@ filename=$timestamp
 output_tmp=$BASE/$filename
 
 # Scan pages
-echo "scan from $FRIENDLY_NAME($device)"
+echo "scan from $friendly_name($device)"
 echo scanadf --device-name "$device" --resolution "$RESOLUTION" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm
 scanadf --device-name "$device" --resolution "$RESOLUTION" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm # user needs to be in lp group
 
