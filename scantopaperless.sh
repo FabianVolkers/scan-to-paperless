@@ -66,7 +66,6 @@ paperless_url=${!paperless_url_var}
 hass_device=${!hass_device_var}
 
 # Ensure base dir exists
-#BASE=~/brscan
 BASE=$SCANNER_BASE_DIR/$scanner_user
 if [ "$scanner_mode" == 'duplex' ];then
   BASE="$BASE/duplex"
