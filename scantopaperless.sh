@@ -31,8 +31,13 @@ A4_WIDTH=210
 # shellcheck disable=SC2034
 A4_HEIGHT=297
 
-echo "Loading user config from /opt/brother/scanner/brscan-skey/script/.env"
-source /opt/brother/scanner/brscan-skey/script/.env
+if [ "$(find /opt/brother/scanner/brscan-skey/script/.env)" != '' ];then
+    echo "Loading user config from /opt/brother/scanner/brscan-skey/script/.env"
+    source /opt/brother/scanner/brscan-skey/script/.env
+else
+    echo ".env file not found at /opt/brother/scanner/brscan-skey/script/.env"
+    echo "Unable to load config, aborting"
+fi
 
 # Read Arguments
 device=$2
