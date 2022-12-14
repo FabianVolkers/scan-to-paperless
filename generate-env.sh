@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 source .env
 
 EXAMPLE_ENV_FILENAME=".env.example"
