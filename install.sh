@@ -16,6 +16,8 @@ done
 echo Installing required packages "${uninstalled_packages[@]}"
 apt update && apt install -y "${uninstalled_packages[@]}"
 
+# TODO: only install missing packages
+# TODO: only install patch if required
 echo Getting brother drivers
 curl -o ~/brscan4-0.4.11-1.amd64.deb https://download.brother.com/welcome/dlf105200/brscan4-0.4.11-1.amd64.deb
 curl -o ~/brscan-skey-0.3.1-2.amd64.deb https://download.brother.com/welcome/dlf006652/brscan-skey-0.3.1-2.amd64.deb
