@@ -65,7 +65,6 @@ paperless_token=${!paperless_token_var}
 paperless_url=${!paperless_url_var}
 hass_device=${!hass_device_var}
 
-resolution=$RESOLUTION
 device=$SCANNER
 
 # Ensure base dir exists
@@ -90,8 +89,8 @@ output_tmp=$BASE/$filename
 
 # Scan pages
 echo "scan from $FRIENDLY_NAME($device)"
-echo scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm
-scanadf --device-name "$device" --resolution "$resolution" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm # user needs to be in lp group
+echo scanadf --device-name "$device" --resolution "$RESOLUTION" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm
+scanadf --device-name "$device" --resolution "$RESOLUTION" -x "$WIDTH" -y "$HEIGHT" -o "$output_tmp"_%04d.pbm # user needs to be in lp group
 
 # Convert images to PostScript
 echo "Convert images to PostScript"
@@ -100,8 +99,8 @@ for pnmfile in "$output_tmp"*.pbm
 do
    # shellcheck disable=SC2001
    psfile=$(echo "$pnmfile" | sed 's/\.pbm$/\.ps/')
-   echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$psfile"
-   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$psfile" &
+   echo pnmtops -dpi="$RESOLUTION" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$psfile"
+   pnmtops -dpi="$RESOLUTION" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$psfile" &
    pnmtops_pids+=(${!})
 done
 
