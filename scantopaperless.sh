@@ -66,11 +66,11 @@ paperless_url=${!paperless_url_var}
 hass_device=${!hass_device_var}
 
 # Ensure base dir exists
-BASE=$SCANNER_BASE_DIR/$scanner_user
+base=$SCANNER_BASE_DIR/$scanner_user
 if [ "$scanner_mode" == 'duplex' ];then
-  BASE="$BASE/duplex"
+  base="$base/duplex"
 fi
-mkdir -p "$BASE"
+mkdir -p "$base"
 
 if [ "$(which usleep)" != '' ];then
     usleep 10000
@@ -82,7 +82,7 @@ fi
 # Set full path for tempfile
 timestamp=$(date "+%Y_%m_%d__%H_%M_%S")
 filename=$timestamp
-output_tmp=$BASE/$filename
+output_tmp=$base/$filename
 
 # Scan pages
 echo "scan from $friendly_name($device)"
@@ -131,11 +131,11 @@ rm "$output_tmp"*.ps
 
 if [ "$scanner_mode" == 'duplex' ];then
    ready_to_upload=false
-   if [ "$(find "$BASE"/*.pdf | wc -l)" -gt 1 ];then
+   if [ "$(find "$base"/*.pdf | wc -l)" -gt 1 ];then
      output_tmp="$output_tmp"_merged
      filename="$filename"_merged
-     ODD=$(find "$BASE"/* | head -n1)
-     EVEN=$(find "$BASE"/* | head -n2 | tail -n1)
+     ODD=$(find "$base"/* | head -n1)
+     EVEN=$(find "$base"/* | head -n2 | tail -n1)
      echo "Merging odd $ODD and even $EVEN page numbers"
      echo pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
      pdftk A="$ODD" B="$EVEN" shuffle A Bend-1south output "$output_tmp".pdf
@@ -154,12 +154,12 @@ if [ "$ready_to_upload" == true ];then
   curl -s -X POST -H "Content-Type:multipart/form-data" -H "Authorization: Token ${paperless_token}" --form document=@"$output_tmp".pdf "$paperless_url"/api/documents/post_document/
 
   if [ "$scanner_mode" == 'duplex' ];then
-    echo "Moving merged file to $BASE/../"
-    mv "$output_tmp".pdf "$BASE"/../
+    echo "Moving merged file to $base/../"
+    mv "$output_tmp".pdf "$base"/../
 
     # Remove merged PDFs from local disk
-    echo rm "$BASE"/*.pdf
-    rm "$BASE"/*.pdf
+    echo rm "$base"/*.pdf
+    rm "$base"/*.pdf
   fi
 fi
 
