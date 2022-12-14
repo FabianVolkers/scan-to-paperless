@@ -4,13 +4,17 @@ if [ "$USER" != 'root' ];then
     echo Install script must be run as root, aborting.
 fi
 
-echo Installing required packages
-apt update && apt install -y \
-    sane \
-    netpbm \
-    pdftk \
-    ghostscript \
-    bc
+required_packages=(sane netpbm pdftk ghostscript bc)
+uninstalled_packages=()
+for package in "${required_packages[@]}"
+do
+    if [ "$(apt show "$package" | grep installed)" == '' ];then
+        uninstalled_packages+=("$package")
+    fi
+done
+
+echo Installing required packages "${uninstalled_packages[@]}"
+apt update && apt install -y "${uninstalled_packages[@]}"
 
 echo Getting brother drivers
 curl -o ~/brscan4-0.4.11-1.amd64.deb https://download.brother.com/welcome/dlf105200/brscan4-0.4.11-1.amd64.deb
