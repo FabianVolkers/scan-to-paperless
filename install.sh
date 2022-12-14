@@ -32,7 +32,9 @@ echo Installing scan-to-paperless
 curl -o /opt/brother/scanner/brscan-skey/script/scantopaperless.sh https://raw.githubusercontent.com/FabianVolkers/scan-to-paperless/main/scantopaperless.sh
 curl -o /opt/brother/scanner/brscan-skey/brscan-skey.config https://raw.githubusercontent.com/FabianVolkers/scan-to-paperless/main/brscan-skey.config
 curl -o /etc/systemd/system/brscan-skey.service https://raw.githubusercontent.com/FabianVolkers/scan-to-paperless/main/brscan-skey.service
-curl -o /opt/brother/scanner/brscan-skey/script/.env https://raw.githubusercontent.com/FabianVolkers/scan-to-paperless/main/.env
+if [ "$(find /opt/brother/scanner/brscan-skey/script/.env)" == '' ];then
+    curl -o /opt/brother/scanner/brscan-skey/script/.env https://raw.githubusercontent.com/FabianVolkers/scan-to-paperless/main/.env
+fi
 
 # TODO:
 # interactive .env configuration
