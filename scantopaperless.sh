@@ -26,7 +26,9 @@ num_cores=$(grep -c processor /proc/cpuinfo)
 # CONSTANTS
 # Papersizes in millimeter
 # A4 Papersize
+# shellcheck disable=SC2034
 A4_WIDTH=210
+# shellcheck disable=SC2034
 A4_HEIGHT=297
 
 echo "Loading user config from /opt/brother/scanner/brscan-skey/script/.env"
