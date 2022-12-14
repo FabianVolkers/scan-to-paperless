@@ -10,6 +10,10 @@ set +o noclobber
 
 echo "Begin scan from option $1"
 
+# Set working directory
+script_relative_dir=$(dirname "${BASH_SOURCE[0]}") 
+cd "$script_relative_dir" || exit
+
 # Check if required packages are installed
 required_packages=(scanadf pnmtops psmerge ps2pdf pdftk bc)
 for package in "${required_packages[@]}"
