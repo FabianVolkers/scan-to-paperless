@@ -35,7 +35,7 @@ echo "Loading user config from /opt/brother/scanner/brscan-skey/script/.env"
 source /opt/brother/scanner/brscan-skey/script/.env
 
 # Read Arguments
-SCANNER=$2
+device=$2
 FRIENDLY_NAME=$3 # Could be read dynamically
 
 papersize_width_var="$PAPERSIZE"_WIDTH
@@ -64,8 +64,6 @@ hass_device_var="HASS_DEVICE_$scanner_user"
 paperless_token=${!paperless_token_var}
 paperless_url=${!paperless_url_var}
 hass_device=${!hass_device_var}
-
-device=$SCANNER
 
 # Ensure base dir exists
 #BASE=~/brscan
