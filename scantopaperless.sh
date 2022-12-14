@@ -112,7 +112,7 @@ rm -f "$output_tmp"*.pbm
 
 # Merge individual PostScript files
 echo "Merge individual PostScript files"
-read -ra psfiles < <(ls "$output_tmp"*.ps | tr '\n' ' ')
+read -ra psfiles < <(find "$output_tmp"*.ps | tr '\n' ' ')
 echo psmerge -o"$output_tmp".ps "${psfiles[@]}"
 psmerge -o"$output_tmp".ps "${psfiles[@]}"
 
