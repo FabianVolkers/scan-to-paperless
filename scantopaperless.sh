@@ -112,8 +112,9 @@ rm -f "$output_tmp"*.pbm
 
 # Merge individual PostScript files
 echo "Merge individual PostScript files"
-echo psmerge -o"$output_tmp".ps  $(ls "$output_tmp"*.ps | tr '\n' ' ')
-psmerge -o"$output_tmp".ps  $(ls "$output_tmp"*.ps | tr '\n' ' ')
+read -ra psfiles < <(ls "$output_tmp"*.ps | tr '\n' ' ')
+echo psmerge -o"$output_tmp".ps "${psfiles[@]}"
+psmerge -o"$output_tmp".ps "${psfiles[@]}"
 
 # Convert PostScript file to PDF
 echo "Convert PostScript file to PDF"
