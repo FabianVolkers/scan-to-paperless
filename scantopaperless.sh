@@ -96,8 +96,9 @@ echo "Convert images to PostScript"
 pnmtops_pids=()
 for pnmfile in "$output_tmp"*.pbm
 do
-   echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$pnmfile".ps
-   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$pnmfile".ps &
+   psfile=$(echo $pnmfile | sed 's/\.pbm$/\.ps/')
+   echo pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  "$psfile"
+   pnmtops -dpi="$resolution" -imagewidth="$WIDTH_INCHES" -imageheight="$HEIGHT_INCHES" -nocenter "$pnmfile"  > "$psfile" &
    pnmtops_pids+=(${!})
 done
 
